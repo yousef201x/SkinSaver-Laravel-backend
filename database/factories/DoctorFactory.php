@@ -17,7 +17,12 @@ class DoctorFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => $this->faker->name,
+            'phone_number' => $this->faker->unique()->phoneNumber,
+            'email' => $this->faker->unique()->email,
+            'clinic_address' => $this->faker->address(),
+            'schedule' => 'Sunday to thursday from 9 AM to 5 PM',
+            'doctor_image' => $this->faker->imageUrl,
         ];
     }
 }

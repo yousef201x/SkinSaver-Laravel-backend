@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Doctor;
 use App\Models\Scan;
 use Illuminate\Database\Seeder;
 
@@ -25,5 +26,6 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
         ]);
         Scan::factory(10)->create();
+        Doctor::factory(10)->create();
     }
 }
