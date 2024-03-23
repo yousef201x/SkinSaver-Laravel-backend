@@ -4,11 +4,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\DoctorController;
-use App\Http\Controllers\DoctorImageController;
 
 /*
 |--------------------------------------------------------------------------
-| API Routes
+| Dashboard API Routes
 |--------------------------------------------------------------------------
 |
 | Here is where you can register API routes for your application. These
@@ -17,16 +16,8 @@ use App\Http\Controllers\DoctorImageController;
 |
 */
 
-Route::name('auth.')->group(function (){
-    Route::post('register', [AuthController::class, 'register'])->name('register');
-    Route::post('login', [AuthController::class, 'login'])->name('login');
-    Route::post('logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth:sanctum');
-});
-
 Route::middleware('auth:sanctum')->group(function () {
-    Route::apiResource('doctors',DoctorController::class)->only(['show','index']);
-});
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+    Route::middleware('isAdmin')->group(function () {
+        Route::apiResource('doctors',DoctorController::class)->except(['index','show']);
+    });
 });

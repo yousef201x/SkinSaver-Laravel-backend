@@ -11,7 +11,7 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
+    final public function register(Request $request) : \Illuminate\Http\JsonResponse
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -30,7 +30,7 @@ class AuthController extends Controller
         return response()->json(['username' => $user->name, 'role' => $user->role, 'token' => $token], 201);
     }
 
-    public function login(Request $request)
+    final public function login(Request $request) : \Illuminate\Http\JsonResponse
     {
         $request->validate([
             'email' => 'required|string|email',
@@ -49,10 +49,9 @@ class AuthController extends Controller
         return response()->json(['username' => $user->name, 'role' => $user->role, 'token' => $token], 200);
     }
 
-    public function logout()
+    final public function logout() : \Illuminate\Http\JsonResponse
     {
         request()->user()->currentAccessToken()->delete();
-
         return response()->json(['message' => 'Logged out successfully'], 200);
     }
 }
