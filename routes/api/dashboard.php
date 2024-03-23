@@ -16,8 +16,7 @@ use App\Http\Controllers\DoctorController;
 |
 */
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::middleware('isAdmin')->group(function () {
-        Route::apiResource('doctors',DoctorController::class)->except(['index','show']);
-    });
+Route::middleware(['auth:sanctum', 'isAdmin'])->group(function () {
+    Route::apiResource('doctors', DoctorController::class)->except(['index', 'show']);
 });
+
