@@ -11,14 +11,16 @@ class IsAdmin
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next)
     {
         $user = auth()->user();
-        // if ($user->role != 'admin') {
-        return response()->json(['message' => 'Unauthorized', 'user' => $user], 401);
-        // }
+        if ($user->role != 'admin') {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
         return $next($request);
     }
 }
