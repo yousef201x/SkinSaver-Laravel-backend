@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\ScanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,5 +19,6 @@ use App\Http\Controllers\DoctorController;
 
 Route::middleware(['auth:sanctum', 'isAdmin'])->group(function () {
     Route::apiResource('doctors', DoctorController::class)->except(['index', 'show']);
+    Route::apiResource('scans',ScanController::class)->except('store');
 });
 
