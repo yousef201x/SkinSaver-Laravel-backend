@@ -17,8 +17,7 @@ use App\Http\Controllers\ScanController;
 |
 */
 
-Route::middleware(['auth:sanctum', 'isAdmin'])->group(function () {
-    Route::apiResource('doctors', DoctorController::class)->except(['index', 'show']);
-    Route::apiResource('scans',ScanController::class)->except('store');
-});
-
+// Route::middleware(['auth:sanctum', 'isAdmin'])->group(function () {
+Route::apiResource('doctors', DoctorController::class)->except(['index', 'show']);
+Route::apiResource('scans', ScanController::class)->except('store');
+// });
