@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\DoctorResource;
 use App\Models\Doctor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -42,7 +43,7 @@ class DoctorController extends Controller
     }
 
     // Get doctors data with optional search and pagination
-    public function index(Request $request): \Illuminate\Http\JsonResponse
+    public function index(Request $request)
     {
         try {
             if ($request->search) {
@@ -51,10 +52,17 @@ class DoctorController extends Controller
                 $doctors = $this->getDoctorWhereName($search);
             } else {
                 // Fetch all doctors with default pagination
-                $doctors = Doctor::select('doctors.*')->orderBy('id', 'desc')->paginate(10);
+                $doctors = Doctor::select('doctors.*')->orderBy(
+                    'id',
+                    'desc'
+                )->paginate(10);
             }
-            // Return doctors data as JSON response
-            return response()->json(['data' => $doctors], 200);
+
+            // Transform the doctors data into the DoctorResource format
+            $doctorsResource = DoctorResource::collection($doctors);
+
+            // Return doctors data as JSON response using the resource
+            return $doctorsResource;
         } catch (\Exception $exception) {
             // Log any errors and return an error response
             Log::error('DoctorController@index Error: ' . $exception->getMessage());
