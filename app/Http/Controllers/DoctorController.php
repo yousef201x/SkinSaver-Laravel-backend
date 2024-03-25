@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Doctor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class DoctorController extends Controller
 {
@@ -41,7 +42,7 @@ class DoctorController extends Controller
     }
 
     // Get doctors data with optional search and pagination
-    public function index(Request $request, $paginate = 10): \Illuminate\Http\JsonResponse
+    public function index(Request $request): \Illuminate\Http\JsonResponse
     {
         try {
             if ($request->search) {
@@ -50,7 +51,7 @@ class DoctorController extends Controller
                 $doctors = $this->getDoctorWhereName($search);
             } else {
                 // Fetch all doctors with default pagination
-                $doctors = Doctor::select('doctors.*')->orderBy('id', 'desc')->paginate($paginate);
+                $doctors = Doctor::select('doctors.*')->orderBy('id', 'desc')->paginate(10);
             }
             // Return doctors data as JSON response
             return response()->json(['data' => $doctors], 200);
@@ -107,6 +108,11 @@ class DoctorController extends Controller
 
             // Handle doctor image upload if provided
             if ($request->file('doctor_image')) {
+                // Delete the old image if it exists
+                if ($doctor->doctor_image) {
+                    Storage::delete($doctor->doctor_image);
+                }
+
                 // Store the new image and update the image path
                 $imagePath = $request->file('doctor_image')->store('images');
                 $doctor->doctor_image = $imagePath;
@@ -128,8 +134,15 @@ class DoctorController extends Controller
     public function destroy($id)
     {
         try {
-            // Find the doctor by ID and delete
+            // Find the doctor by ID
             $doctor = Doctor::findOrFail($id);
+
+            // Check if the doctor has an associated image and delete it
+            if ($doctor->doctor_image) {
+                Storage::delete($doctor->doctor_image);
+            }
+
+            // Delete the doctor record
             $doctor->delete();
 
             // Return success response

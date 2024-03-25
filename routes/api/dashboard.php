@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\ScanController;
 
@@ -17,7 +18,8 @@ use App\Http\Controllers\ScanController;
 |
 */
 
-// Route::middleware(['auth:sanctum', 'isAdmin'])->group(function () {
-Route::apiResource('doctors', DoctorController::class)->except(['index', 'show']);
-Route::apiResource('scans', ScanController::class)->except('store');
-// });
+Route::middleware(['auth:sanctum', 'isAdmin'])->group(function () {
+    Route::apiResource('doctors', DoctorController::class)->except(['index', 'show']);
+    Route::apiResource('scans', ScanController::class)->except('store');
+    Route::apiResource('contactus', ContactUsController::class)->except('store');
+});

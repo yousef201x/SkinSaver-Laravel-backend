@@ -33,18 +33,17 @@ class ScanController extends Controller
 
     public function index(Request $request)
     {
-        try{
-            if($request->search){
+        try {
+            if ($request->search) {
                 $name = $request->search;
                 $scans = $this->getScanWhereUserName($name);
-            }else{
+            } else {
                 $scans = $this->getScans();
             }
-            return response()->json(['data'=>$scans],200);
-        }catch (\Exception $exception){
+            return response()->json(['data' => $scans], 200);
+        } catch (\Exception $exception) {
             Log::error('ScanController@index Error: ' . $exception->getMessage());
             return response()->json(['message' => 'Something went wrong. Please try again later.'], 500);
         }
     }
-
 }
