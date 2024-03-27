@@ -26,6 +26,6 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
         ]);
         Scan::factory(10)->create();
-        Doctor::factory(10)->create();
+        Doctor::factory(100)->create();
     }
 }
