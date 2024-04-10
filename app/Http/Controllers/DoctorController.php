@@ -22,10 +22,10 @@ class DoctorController extends Controller
         $request->validate([
             'name' => 'required|max:255',
             'email' => 'required|max:255|unique:doctors,email',
-            'phone_number' => 'required|numeric|digits:11',
+            'phone_number' => 'required|numeric|unique:doctors,phone_number|digits:11',
             'clinic_address' => 'required|max:255',
             'schedule' => 'required|max:255',
-            'doctor_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'doctor_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
     }
 
@@ -70,18 +70,42 @@ class DoctorController extends Controller
         }
     }
 
-    // Store a new doctor record
+    public function show(Request $request, $id)
+    {
+        try {
+            // Find the doctor by ID
+            $doctor = Doctor::findOrFail($id);
+
+            // Check if the doctor was found
+            if (!$doctor) {
+                // Return error response if doctor is not found
+                return response()->json(['message' => 'Doctor not found'], 404);
+            }
+
+            // Transform the doctor data into the DoctorResource format
+            $doctorResource = new DoctorResource($doctor);
+
+            // Return doctor data as JSON response using the resource
+            return $doctorResource;
+        } catch (\Exception $exception) {
+            // Log any errors and return an error response
+            Log::error('DoctorController@show Error: ' . $exception->getMessage());
+            return response()->json(['message' => 'Something went wrong. Please try again later.'], 500);
+        }
+    }
+
+
     public function store(Request $request)
     {
         // Validate the request data
-        $validatedRequest = $this->storeValidation($request);
+        $this->storeValidation($request);
 
         // Handle doctor image upload
         if ($request->file('doctor_image')) {
             $imagePath = $request->file('doctor_image')->store('images');
         } else {
             // Return error response if doctor image is not provided
-            return response()->json(['message' => 'doctor image is required'], 500);
+            return response()->json(['message' => 'Doctor image is required'], 500);
         }
 
         try {
@@ -92,11 +116,11 @@ class DoctorController extends Controller
             $doctor->phone_number = $request->phone_number;
             $doctor->clinic_address = $request->clinic_address;
             $doctor->schedule = $request->schedule;
-            $doctor->doctor_image = $imagePath;
+            $doctor->doctor_image = $imagePath; // Assign the image path to the property
             $doctor->save();
 
             // Return success response if doctor is saved successfully
-            return response()->json(['message' => 'doctor created successfully'], 200);
+            return response()->json(['message' => 'Doctor created successfully'], 200);
         } catch (\Exception $exception) {
             // Log any errors and return an error response
             Log::error('DoctorController@index Error: ' . $exception->getMessage());
@@ -104,30 +128,39 @@ class DoctorController extends Controller
         }
     }
 
-    // Update an existing doctor record
+    public function edit($id)
+    {
+        $doctor = Doctor::find($id);
+        return view('test')->with(compact('doctor'));
+    }
+
     public function update(Request $request, $id)
     {
         // Validate the request data
         $this->updateValidation($request);
-
         try {
             // Find the doctor by ID
             $doctor = Doctor::findOrFail($id);
 
-            // Handle doctor image upload if provided
-            if ($request->file('doctor_image')) {
-                // Delete the old image if it exists
-                if ($doctor->doctor_image) {
-                    Storage::delete($doctor->doctor_image);
-                }
+            if ($doctor) {
 
-                // Store the new image and update the image path
-                $imagePath = $request->file('doctor_image')->store('images');
-                $doctor->doctor_image = $imagePath;
+                // Handle doctor image upload if provided
+                if ($request->file('doctor_image'))
+                    if ($doctor->doctor_image) {
+                        // Delete the previous image if it exists
+                        Storage::delete($doctor->doctor_image);
+                        // Store the new image
+                        $imagePath = $request->file('doctor_image')->store('images');
+                        // Update the doctor with the new image path
+                        $doctor->update([
+                            'doctor_image' => $imagePath
+                        ]);
+                    }
+                // Update other fields of the doctor if provided
+                $doctor->update($request->except('doctor_image'));
+            } else {
+                return response()->json(['message' => 'Doctor not found'], 404);
             }
-
-            // Update the doctor's fields using mass assignment
-            $doctor->update($request->except('doctor_image')); // Exclude the image field from mass assignment
 
             // Return success response
             return response()->json(['message' => 'Doctor updated successfully'], 200);

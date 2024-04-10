@@ -17,6 +17,7 @@ use App\Http\Controllers\ScanController;
 |
 */
 
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('doctors', DoctorController::class)->only(['show', 'index']);
     Route::apiResource('scans', ScanController::class)->only('store');
