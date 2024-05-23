@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skin Saver</title>
+    <title>API Landing Page</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -29,6 +29,9 @@
 
         .container {
             flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             max-width: 900px;
             margin: 20px auto;
             padding: 20px;
@@ -62,7 +65,7 @@
     </div>
 
     <div class="footer">
-        <p>&copy; 2024 Skin Saver API. All rights reserved.</p>
+        <p>&copy; 2024 Skin Saver. All rights reserved.</p>
     </div>
 
 </body>
