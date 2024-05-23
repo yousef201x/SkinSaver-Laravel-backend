@@ -75,10 +75,12 @@ class ScanController extends Controller
             if ($request->file('image_path')) {
                 // Store the image file and create a new Scan instance
                 $path = $request->file('image_path')->store('scans');
-                $scan = new Scan();
-                $scan->user_id = $userId;
-                $scan->image_path = $path;
-                $scan->save();
+
+                $scan = Scan::create([
+                    'user_id' => $userId,
+                    'image_path' => 'storage/' . $path,
+                ]);
+
                 // Return a success message as a JSON response
                 return response()->json(['message' => 'Scan created successfully'], 500);
             } else {
