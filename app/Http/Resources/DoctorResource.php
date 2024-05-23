@@ -20,7 +20,7 @@ class DoctorResource extends JsonResource
             'phone number' => $this->phone_number,
             'doctor email' => $this->email,
             'doctor clinic address' => $this->clinic_address,
-            'image' => asset('storage/' . $this->doctor_image),
+            'image' => $this->doctor_image,
             'doctor schedule' => $this->schedule,
         ];
     }

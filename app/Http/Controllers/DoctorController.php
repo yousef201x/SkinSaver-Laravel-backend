@@ -116,7 +116,7 @@ class DoctorController extends Controller
             $doctor->phone_number = $request->phone_number;
             $doctor->clinic_address = $request->clinic_address;
             $doctor->schedule = $request->schedule;
-            $doctor->doctor_image = $imagePath; // Assign the image path to the property
+            $doctor->doctor_image = asset('storage/' . $imagePath); // Assign the image path to the property
             $doctor->save();
 
             // Return success response if doctor is saved successfully
@@ -126,12 +126,6 @@ class DoctorController extends Controller
             Log::error('DoctorController@index Error: ' . $exception->getMessage());
             return response()->json(['message' => 'Something went wrong. Please try again later.' . $exception->getMessage()], 500);
         }
-    }
-
-    public function edit($id)
-    {
-        $doctor = Doctor::find($id);
-        return view('test')->with(compact('doctor'));
     }
 
     public function update(Request $request, $id)
@@ -153,7 +147,7 @@ class DoctorController extends Controller
                         $imagePath = $request->file('doctor_image')->store('images');
                         // Update the doctor with the new image path
                         $doctor->update([
-                            'doctor_image' => $imagePath
+                            'doctor_image' =>  asset('storage/' . $imagePath)
                         ]);
                     }
                 // Update other fields of the doctor if provided
