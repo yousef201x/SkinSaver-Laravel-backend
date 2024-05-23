@@ -78,7 +78,7 @@ class ScanController extends Controller
 
                 $scan = Scan::create([
                     'user_id' => $userId,
-                    'image_path' => 'storage/' . $path,
+                    'image_path' => asset('storage/' . $path),
                 ]);
 
                 // Return a success message as a JSON response
