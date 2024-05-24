@@ -16,6 +16,7 @@ class ScanResource extends JsonResource
     {
         return [
             'scan_id' => $this->id,
+            'user_id' => $this->user->id,
             'user_name' => $this->user->name,
             'image' => $this->image_path,
         ];
