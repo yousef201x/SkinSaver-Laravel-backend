@@ -22,7 +22,7 @@ class DoctorController extends Controller
         $request->validate([
             'name' => 'required|max:255',
             'email' => 'required|max:255|unique:doctors,email',
-            'phone_number' => 'required|numeric|unique:doctors,phone_number|digits:11',
+            'phone_number' => 'phone:EG',
             'clinic_address' => 'required|max:255',
             'schedule' => 'required|max:255',
             'doctor_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
@@ -35,7 +35,7 @@ class DoctorController extends Controller
         $request->validate([
             'name' => 'nullable|max:255',
             'email' => 'nullable|max:255|unique:doctors,email',
-            'phone_number' => 'nullable|numeric|digits:11',
+            'phone_number' => 'phone:EG',
             'clinic_address' => 'nullable|max:255',
             'schedule' => 'nullable|max:255',
             'doctor_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
