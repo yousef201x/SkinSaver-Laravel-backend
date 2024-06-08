@@ -14,8 +14,6 @@ class AuthController extends Controller
 {
     final public function register(Request $request): \Illuminate\Http\JsonResponse
     {
-        $phoneNumber = "+2" . $request->phone;
-
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -27,7 +25,7 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'phone' => $phoneNumber,
+            'phone' => $request->phone,
             'password' => Hash::make($request->password),
         ]);
 
