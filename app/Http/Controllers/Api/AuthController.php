@@ -9,19 +9,25 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
+
 class AuthController extends Controller
 {
     final public function register(Request $request): \Illuminate\Http\JsonResponse
     {
+        $phoneNumber = "+2" . $request->phone;
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6',
+            'password' => 'required|string|min:6|confirmed',
+            'password_confirmation' => 'required|string|min:6|',
+            'phone' => 'phone:EG',
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'phone' => $phoneNumber,
             'password' => Hash::make($request->password),
         ]);
 
