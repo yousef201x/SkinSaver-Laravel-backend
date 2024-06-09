@@ -3,6 +3,7 @@
 use App\Http\Controllers\ContactUsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ScanController;
 
 
@@ -22,4 +23,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('doctors', DoctorController::class)->only(['show', 'index']);
     Route::apiResource('scans', ScanController::class)->only('store');
     Route::apiResource('contactus', ContactUsController::class)->only('store');
+    Route::post('/pay', [PaymentController::class, 'initiatePayment']);
 });
